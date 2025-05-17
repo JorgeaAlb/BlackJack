@@ -6,513 +6,561 @@
     <title>Blackjack Premium</title>
     <style>
         :root {
-            --color-gold: #FFD700;
-            --color-gold-dark: #D4AF37;
-            --color-red: #E74C3C;
-            --color-green: #27AE60;
-            --color-dark: #1A1A1A;
-            --color-dark-light: #2C3E50;
-            --color-bg: #121212;
-            --color-bg-light: #1E1E1E;
-            --color-text: #ECF0F1;
-            --color-shadow: rgba(0, 0, 0, 0.5);
-        }
+    --color-gold: #FFD700;
+    --color-gold-dark: #D4AF37;
+    --color-red: #E74C3C;
+    --color-green: #27AE60;
+    --color-dark: #1A1A1A;
+    --color-dark-light: #2C3E50;
+    --color-bg: #121212;
+    --color-bg-light: #1E1E1E;
+    --color-text: #ECF0F1;
+    --color-shadow: rgba(0, 0, 0, 0.5);
+}
 
-        @font-face {
-            font-family: 'Casino';
-            src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
-        }
+@font-face {
+    font-family: 'Casino';
+    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: var(--color-bg);
-            font-family: 'Arial', sans-serif;
-            color: var(--color-text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
-                linear-gradient(to bottom, var(--color-bg), var(--color-dark));
-        }
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--color-bg);
+    font-family: 'Arial', sans-serif;
+    color: var(--color-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+        linear-gradient(to bottom, var(--color-bg), var(--color-dark));
+}
 
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-            background: rgba(30, 30, 30, 0.9);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px var(--color-shadow);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            backdrop-filter: blur(5px);
-        }
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background: rgba(30, 30, 30, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--color-shadow);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    backdrop-filter: blur(5px);
+    flex: 1;
+}
 
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(to right, var(--color-dark-light), var(--color-dark));
-            border-radius: 10px;
-            border-left: 5px solid var(--color-gold);
-            box-shadow: 0 5px 15px var(--color-shadow);
-        }
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(to right, var(--color-dark-light), var(--color-dark));
+    border-radius: 10px;
+    border-left: 5px solid var(--color-gold);
+    box-shadow: 0 5px 15px var(--color-shadow);
+}
 
-        .stats {
-            display: flex;
-            gap: 20px;
-            font-size: 1rem;
-        }
+.stats {
+    display: flex;
+    gap: 20px;
+    font-size: 1rem;
+}
 
-        .stats div {
-            padding: 10px 15px;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-width: 100px;
-            text-align: center;
-        }
+.stats div {
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 100px;
+    text-align: center;
+}
 
-        .stats span {
-            display: block;
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--color-gold);
-            margin-top: 5px;
-        }
+.stats span {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--color-gold);
+    margin-top: 5px;
+}
 
-        .chip-container {
-            display: flex;
-            gap: 15px;
-            margin: 30px 0;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+.chip-container {
+    display: flex;
+    gap: 15px;
+    margin: 30px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
-        .chip {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 8px var(--color-shadow);
-            position: relative;
-            overflow: hidden;
-            border: 2px solid var(--color-gold);
-        }
+.chip {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: white;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 8px var(--color-shadow);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--color-gold);
+}
 
-        .chip::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(45deg);
-            transition: all 0.3s;
-        }
+.chip::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    transform: rotate(45deg);
+    transition: all 0.3s;
+}
 
-        .chip:hover {
-            transform: translateY(-5px) scale(1.1);
-            box-shadow: 0 8px 15px var(--color-shadow);
-        }
+.chip:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 15px var(--color-shadow);
+}
 
-        .chip:hover::before {
-            left: 100%;
-        }
+.chip:hover::before {
+    left: 100%;
+}
 
-        .section-title {
-            text-align: center;
-            margin: 30px 0 15px;
-            color: var(--color-gold);
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: bold;
-            text-shadow: 0 2px 5px var(--color-shadow);
-            position: relative;
-        }
+.section-title {
+    text-align: center;
+    margin: 30px 0 15px;
+    color: var(--color-gold);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-shadow: 0 2px 5px var(--color-shadow);
+    position: relative;
+}
 
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(to right, transparent, var(--color-gold), transparent);
-            margin: 10px auto;
-        }
+.section-title::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+    margin: 10px auto;
+}
 
-        .cards-container {
-            display: flex;
-            gap: 20px;
-            min-height: 200px;
-            margin: 30px 0;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
-            justify-content: center;
-            flex-wrap: wrap;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
+.cards-container {
+    display: flex;
+    gap: 20px;
+    min-height: 200px;
+    margin: 30px 0;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    justify-content: center;
+    flex-wrap: wrap;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
 
-        .cards-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                linear-gradient(135deg, rgba(255,215,0,0.05) 0%, transparent 20%),
-                linear-gradient(-135deg, rgba(255,215,0,0.05) 0%, transparent 20%);
-            pointer-events: none;
-        }
+.cards-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(135deg, rgba(255,215,0,0.05) 0%, transparent 20%),
+        linear-gradient(-135deg, rgba(255,215,0,0.05) 0%, transparent 20%);
+    pointer-events: none;
+}
 
-        .card {
-            width: 120px;
-            height: 168px;
-            background: white;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 28px;
-            color: #333;
-            position: relative;
-            box-shadow: 5px 5px 15px var(--color-shadow);
-            transition: all 0.3s ease;
-            animation: dealCard 0.5s ease-out;
-            transform-style: preserve-3d;
-            padding: 15px;
-        }
+.card {
+    width: 120px;
+    height: 168px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 28px;
+    color: #333;
+    position: relative;
+    box-shadow: 5px 5px 15px var(--color-shadow);
+    transition: all 0.3s ease;
+    animation: dealCard 0.5s ease-out;
+    transform-style: preserve-3d;
+    padding: 15px;
+}
 
-        .card-value {
-            font-size: 2rem;
-            font-weight: bold;
-            align-self: flex-start;
-        }
+.card-value {
+    font-size: 2rem;
+    font-weight: bold;
+    align-self: flex-start;
+}
 
-        .card-suit {
-            font-size: 3rem;
-            margin: auto 0;
-        }
+.card-suit {
+    font-size: 3rem;
+    margin: auto 0;
+}
 
-        .card-value-bottom {
-            align-self: flex-end;
-            transform: rotate(180deg);
-        }
+.card-value-bottom {
+    align-self: flex-end;
+    transform: rotate(180deg);
+}
 
-        .hearts, .diamonds { color: var(--color-red); }
-        .spades, .clubs { color: var(--color-dark); }
+.hearts, .diamonds { color: var(--color-red); }
+.spades, .clubs { color: var(--color-dark); }
 
-        .hidden-card {
-            background: linear-gradient(135deg, var(--color-dark-light), var(--color-dark));
-            color: transparent;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid var(--color-gold-dark);
-        }
+.hidden-card {
+    background: linear-gradient(135deg, var(--color-dark-light), var(--color-dark));
+    color: transparent;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--color-gold-dark);
+}
 
-        .hidden-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                repeating-linear-gradient(
-                    45deg,
-                    rgba(255,215,0,0.1) 0px,
-                    rgba(255,215,0,0.1) 2px,
-                    transparent 2px,
-                    transparent 8px
-                );
-        }
+.hidden-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            rgba(255,215,0,0.1) 0px,
+            rgba(255,215,0,0.1) 2px,
+            transparent 2px,
+            transparent 8px
+        );
+}
 
-        .hidden-card::after {
-            content: '♠';
-            position: absolute;
-            color: rgba(255,255,255,0.05);
-            font-size: 100px;
-            transform: rotate(30deg);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(30deg);
-        }
+.hidden-card::after {
+    content: '♠';
+    position: absolute;
+    color: rgba(255,255,255,0.05);
+    font-size: 100px;
+    transform: rotate(30deg);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(30deg);
+}
 
-        .controls {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
+.controls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
 
-        button {
-            padding: 18px 40px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(to bottom, var(--color-gold), var(--color-gold-dark));
-            color: var(--color-dark);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            min-width: 180px;
-            font-size: 1.1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
+button {
+    padding: 18px 40px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, var(--color-gold), var(--color-gold-dark));
+    color: var(--color-dark);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 180px;
+    font-size: 1.1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
 
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: all 0.5s;
-        }
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: all 0.5s;
+}
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        }
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
 
-        button:hover::before {
-            left: 100%;
-        }
+button:hover::before {
+    left: 100%;
+}
 
-        button:active {
-            transform: translateY(1px);
-        }
+button:active {
+    transform: translateY(1px);
+}
 
-        button:disabled {
-            background: linear-gradient(to bottom, #666, #555);
-            color: #999;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+button:disabled {
+    background: linear-gradient(to bottom, #666, #555);
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
 
-        button:disabled::before {
-            display: none;
-        }
+button:disabled::before {
+    display: none;
+}
 
-        .message {
-            text-align: center;
-            font-size: 1.8rem;
-            margin: 30px 0;
-            min-height: 50px;
-            color: var(--color-gold);
-            text-shadow: 0 2px 5px var(--color-shadow);
-            padding: 20px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-left: 5px solid var(--color-gold);
-            animation: fadeIn 0.5s ease;
-        }
+.message {
+    text-align: center;
+    font-size: 1.8rem;
+    margin: 30px 0;
+    min-height: 50px;
+    color: var(--color-gold);
+    text-shadow: 0 2px 5px var(--color-shadow);
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 5px solid var(--color-gold);
+    animation: fadeIn 0.5s ease;
+}
 
-        .message.win {
-            background: rgba(39, 174, 96, 0.2);
-            border-left-color: var(--color-green);
-            color: var(--color-green);
-            animation: pulse 1.5s infinite;
-        }
+.message.win {
+    background: rgba(39, 174, 96, 0.2);
+    border-left-color: var(--color-green);
+    color: var(--color-green);
+    animation: pulse 1.5s infinite;
+}
 
-        .message.lose {
-            background: rgba(231, 76, 60, 0.2);
-            border-left-color: var(--color-red);
-            color: var(--color-red);
-        }
+.message.lose {
+    background: rgba(231, 76, 60, 0.2);
+    border-left-color: var(--color-red);
+    color: var(--color-red);
+}
 
-        .message.push {
-            background: rgba(52, 152, 219, 0.2);
-            border-left-color: #3498db;
-            color: #3498db;
-        }
+.message.push {
+    background: rgba(52, 152, 219, 0.2);
+    border-left-color: #3498db;
+    color: #3498db;
+}
 
-        @keyframes dealCard {
-            0% { transform: translate(-100px, -100px) rotate(15deg); opacity: 0; }
-            100% { transform: translate(0) rotate(0); opacity: 1; }
-        }
+@keyframes dealCard {
+    0% { transform: translate(-100px, -100px) rotate(15deg); opacity: 0; }
+    100% { transform: translate(0) rotate(0); opacity: 1; }
+}
 
-        @keyframes flip {
-            0% { transform: rotateY(0deg); }
-            50% { transform: rotateY(90deg); }
-            100% { transform: rotateY(0deg); }
-        }
+@keyframes flip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(90deg); }
+    100% { transform: rotateY(0deg); }
+}
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-        /* Efecto especial para el título */
-        .game-title {
-            font-family: 'Playfair Display', serif;
-            text-align: center;
-            font-size: 3rem;
-            color: var(--color-gold);
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px var(--color-gold-dark), 0 0 20px var(--color-shadow);
-            letter-spacing: 2px;
-            position: relative;
-        }
+.game-title {
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    font-size: 3rem;
+    color: var(--color-gold);
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px var(--color-gold-dark), 0 0 20px var(--color-shadow);
+    letter-spacing: 2px;
+    position: relative;
+}
 
-        .game-title::after {
-            content: '';
-            display: block;
-            width: 200px;
-            height: 3px;
-            background: linear-gradient(to right, transparent, var(--color-gold), transparent);
-            margin: 15px auto;
-            border-radius: 50%;
-        }
+.game-title::after {
+    content: '';
+    display: block;
+    width: 200px;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+    margin: 15px auto;
+    border-radius: 50%;
+}
 
-        /* Media Queries para móvil */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                width: 100%;
-                margin: 10px auto;
-                border-radius: 0;
-            }
-            
-            .game-header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
-            }
-            
-            .stats {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-                width: 100%;
-            }
-            
-            .stats div {
-                min-width: 80px;
-                padding: 8px 10px;
-                font-size: 0.9rem;
-            }
-            
-            .stats span {
-                font-size: 1.2rem;
-            }
-            
-            .card {
-                width: 70px;
-                height: 98px;
-                font-size: 20px;
-                padding: 10px;
-            }
-            
-            .card-value {
-                font-size: 1.2rem;
-            }
-            
-            .card-suit {
-                font-size: 1.8rem;
-            }
-            
-            .controls {
-                gap: 10px;
-                margin-top: 20px;
-            }
-            
-            button {
-                padding: 12px 20px;
-                min-width: 120px;
-                font-size: 0.9rem;
-            }
-            
-            .message {
-                font-size: 1.2rem;
-                padding: 15px;
-                margin: 20px 0;
-            }
-            
-            .section-title {
-                font-size: 1.3rem;
-                margin: 20px 0 10px;
-            }
-            
-            .chip {
-                width: 50px;
-                height: 50px;
-                font-size: 0.9rem;
-            }
-            
-            .cards-container {
-                padding: 15px;
-                min-height: 150px;
-                margin: 15px 0;
-            }
-            
-            .game-title {
-                font-size: 2rem;
-                margin-bottom: 20px;
-            }
-            
-            .game-title::after {
-                width: 150px;
-            }
-        }
+/* Estilos del footer */
+footer {
+    width: 100%;
+    background: var(--color-dark-light);
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+}
 
-        @media (max-width: 480px) {
-            .card {
-                width: 60px;
-                height: 84px;
-            }
-            
-            button {
-                min-width: 100px;
-                padding: 10px 15px;
-            }
-            
-            .chip-container {
-                gap: 10px;
-                margin: 20px 0;
-            }
-            
-            .chip {
-                width: 45px;
-                height: 45px;
-                font-size: 0.8rem;
-            }
-            
-            .section-title {
-                font-size: 1.1rem;
-            }
-        }
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-content p {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.instagram-icon {
+    color: var(--color-text);
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.instagram-icon:hover {
+    color: #E1306C;
+    transform: scale(1.2);
+}
+
+/* Media Queries para móvil */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        width: 100%;
+        margin: 10px auto;
+        border-radius: 0;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .stats {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .stats div {
+        min-width: 80px;
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+    
+    .stats span {
+        font-size: 1.2rem;
+    }
+    
+    .card {
+        width: 70px;
+        height: 98px;
+        font-size: 20px;
+        padding: 10px;
+    }
+    
+    .card-value {
+        font-size: 1.2rem;
+    }
+    
+    .card-suit {
+        font-size: 1.8rem;
+    }
+    
+    .controls {
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    button {
+        padding: 12px 20px;
+        min-width: 120px;
+        font-size: 0.9rem;
+    }
+    
+    .message {
+        font-size: 1.2rem;
+        padding: 15px;
+        margin: 20px 0;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+        margin: 20px 0 10px;
+    }
+    
+    .chip {
+        width: 50px;
+        height: 50px;
+        font-size: 0.9rem;
+    }
+    
+    .cards-container {
+        padding: 15px;
+        min-height: 150px;
+        margin: 15px 0;
+    }
+    
+    .game-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    
+    .game-title::after {
+        width: 150px;
+    }
+    
+    /* Footer en móvil */
+    footer {
+        padding: 15px 0;
+    }
+    
+    .footer-content p {
+        font-size: 0.8rem;
+        flex-direction: row;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        width: 60px;
+        height: 84px;
+    }
+    
+    button {
+        min-width: 100px;
+        padding: 10px 15px;
+    }
+    
+    .chip-container {
+        gap: 10px;
+        margin: 20px 0;
+    }
+    
+    .chip {
+        width: 45px;
+        height: 45px;
+        font-size: 0.8rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -565,6 +613,17 @@
     <audio id="loseSound">
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-sad-game-over-1943.mp3" type="audio/mpeg">
     </audio>
+
+    <footer>
+        <div class="footer-content">
+            <p>
+                <a href="https://www.instagram.com/jorge_shh/" class="instagram-icon">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                Jorge Alberto · Blackjack · Todos los derechos reservados. © 2025
+            </p>
+        </div>
+    </footer>
 
     <script> 
 // Variables del juego
