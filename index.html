@@ -374,62 +374,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .game-header {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .stats {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .card {
-                width: 80px;
-                height: 112px;
-                font-size: 20px;
-                padding: 10px;
-            }
-            
-            .card-value {
-                font-size: 1.5rem;
-            }
-            
-            .card-suit {
-                font-size: 2rem;
-            }
-            
-            .controls {
-                gap: 10px;
-            }
-            
-            button {
-                padding: 12px 20px;
-                min-width: 140px;
-                font-size: 1rem;
-            }
-            
-            .message {
-                font-size: 1.4rem;
-                padding: 15px;
-            }
-            
-            .section-title {
-                font-size: 1.4rem;
-            }
-            
-            .chip {
-                width: 60px;
-                height: 60px;
-                font-size: 1rem;
-            }
-        }
-
         /* Efecto especial para el título */
         .game-title {
             font-family: 'Playfair Display', serif;
@@ -450,6 +394,124 @@
             background: linear-gradient(to right, transparent, var(--color-gold), transparent);
             margin: 15px auto;
             border-radius: 50%;
+        }
+
+        /* Media Queries para móvil */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                width: 100%;
+                margin: 10px auto;
+                border-radius: 0;
+            }
+            
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .stats div {
+                min-width: 80px;
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .stats span {
+                font-size: 1.2rem;
+            }
+            
+            .card {
+                width: 70px;
+                height: 98px;
+                font-size: 20px;
+                padding: 10px;
+            }
+            
+            .card-value {
+                font-size: 1.2rem;
+            }
+            
+            .card-suit {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                gap: 10px;
+                margin-top: 20px;
+            }
+            
+            button {
+                padding: 12px 20px;
+                min-width: 120px;
+                font-size: 0.9rem;
+            }
+            
+            .message {
+                font-size: 1.2rem;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+                margin: 20px 0 10px;
+            }
+            
+            .chip {
+                width: 50px;
+                height: 50px;
+                font-size: 0.9rem;
+            }
+            
+            .cards-container {
+                padding: 15px;
+                min-height: 150px;
+                margin: 15px 0;
+            }
+            
+            .game-title {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .game-title::after {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: 60px;
+                height: 84px;
+            }
+            
+            button {
+                min-width: 100px;
+                padding: 10px 15px;
+            }
+            
+            .chip-container {
+                gap: 10px;
+                margin: 20px 0;
+            }
+            
+            .chip {
+                width: 45px;
+                height: 45px;
+                font-size: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
