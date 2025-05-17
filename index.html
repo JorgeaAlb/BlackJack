@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Premium</title>
+    <style>
+        :root {
+            --color-gold: #FFD700;
+            --color-gold-dark: #D4AF37;
+            --color-red: #E74C3C;
+            --color-green: #27AE60;
+            --color-dark: #1A1A1A;
+            --color-dark-light: #2C3E50;
+            --color-bg: #121212;
+            --color-bg-light: #1E1E1E;
+            --color-text: #ECF0F1;
+            --color-shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        @font-face {
+            font-family: 'Casino';
+            src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+        }
+
+        body {
+            margin: 0;
+            padding: 10px;
+            background: var(--color-bg);
+            font-family: 'Arial', sans-serif;
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+                linear-gradient(to bottom, var(--color-bg), var(--color-dark));
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 10px auto;
+            background: rgba(30, 30, 30, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--color-shadow);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .game-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(to right, var(--color-dark-light), var(--color-dark));
+            border-radius: 8px;
+            border-left: 4px solid var(--color-gold);
+            box-shadow: 0 3px 10px var(--color-shadow);
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .stats div {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 80px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .stats span {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--color-gold);
+            margin-top: 3px;
+        }
+
+        .chip-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 6px var(--color-shadow);
+            border: 2px solid var(--color-gold);
+            flex-shrink: 0;
+        }
+
+        .chip::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(45deg);
+            transition: all 0.3s;
+        }
+
+        .chip:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 10px var(--color-shadow);
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 20px 0 10px;
+            color: var(--color-gold);
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            text-shadow: 0 1px 3px var(--color-shadow);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+            margin: 8px auto;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 10px;
+            min-height: 140px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .card {
+            width: 70px;
+            height: 98px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
+            color: #333;
+            position: relative;
+            box-shadow: 3px 3px 8px var(--color-shadow);
+            transition: all 0.3s ease;
+            animation: dealCard 0.5s ease-out;
+            padding: 10px;
+        }
+
+        .card-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            align-self: flex-start;
+        }
+
+        .card-suit {
+            font-size: 1.8rem;
+            margin: auto 0;
+        }
+
+        .card-value-bottom {
+            align-self: flex-end;
+            transform: rotate(180deg);
+            font-size: 1.2rem;
+        }
+
+        .hearts, .diamonds { color: var(--color-red); }
+        .spades, .clubs { color: var(--color-dark); }
+
+        .hidden-card {
+            background: linear-gradient(135deg, var(--color-dark-light), var(--color-dark));
+            color: transparent;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--color-gold-dark);
+        }
+
+        .hidden-card::after {
+            content: '♠';
+            position: absolute;
+            color: rgba(255,255,255,0.05);
+            font-size: 60px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(30deg);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(to bottom, var(--color-gold), var(--color-gold-dark));
+            color: var(--color-dark);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        button:disabled {
+            background: linear-gradient(to bottom, #666, #555);
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            min-height: 40px;
+            color: var(--color-gold);
+            text-shadow: 0 1px 3px var(--color-shadow);
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--color-gold);
+        }
+
+        .message.win {
+            background: rgba(39, 174, 96, 0.2);
+            border-left-color: var(--color-green);
+            color: var(--color-green);
+        }
+
+        .message.lose {
+            background: rgba(231, 76, 60, 0.2);
+            border-left-color: var(--color-red);
+            color: var(--color-red);
+        }
+
+        .message.push {
+            background: rgba(52, 152, 219, 0.2);
+            border-left-color: #3498db;
+            color: #3498db;
+        }
+
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            font-size: 2rem;
+            color: var(--color-gold);
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px var(--color-gold-dark);
+            letter-spacing: 1px;
+        }
+
+        .game-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+            margin: 8px auto;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 30px;
+                margin: 20px auto;
+            }
+
+            .game-header {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 20px;
+            }
+
+            .stats {
+                flex-wrap: nowrap;
+                gap: 20px;
+                font-size: 1rem;
+            }
+
+            .stats div {
+                min-width: 100px;
+                padding: 10px 15px;
+            }
+
+            .stats span {
+                font-size: 1.4rem;
+            }
+
+            .chip {
+                width: 70px;
+                height: 70px;
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin: 30px 0 15px;
+            }
+
+            .section-title::after {
+                width: 100px;
+                height: 3px;
+            }
+
+            .cards-container {
+                min-height: 200px;
+                padding: 30px;
+                gap: 20px;
+            }
+
+            .card {
+                width: 120px;
+                height: 168px;
+                font-size: 28px;
+                padding: 15px;
+            }
+
+            .card-value {
+                font-size: 2rem;
+            }
+
+            .card-suit {
+                font-size: 3rem;
+            }
+
+            .controls {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+
+            button {
+                padding: 18px;
+                font-size: 1.1rem;
+                min-width: 140px;
+            }
+
+            .message {
+                font-size: 1.8rem;
+                padding: 20px;
+            }
+
+            .game-title {
+                font-size: 3rem;
+                margin-bottom: 30px;
+            }
+        }
+
+        @keyframes dealCard {
+            0% { transform: translate(-100px, -100px) rotate(15deg); opacity: 0; }
+            100% { transform: translate(0) rotate(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="game-title">BLACKJACK</h1>
+        
+        <div class="game-header">
+            <div class="stats">
+                <div>Saldo: <span id="balance">1000</span></div>
+                <div>Apuesta: <span id="bet">0</span></div>
+            </div>
+            <div class="stats">
+                <div>Victorias: <span id="wins">0</span></div>
+                <div>Derrotas: <span id="losses">0</span></div>
+                <div>Empates: <span id="pushes">0</span></div>
+            </div>
+        </div>
+
+        <div class="section-title">Haz tu apuesta</div>
+        <div class="chip-container">
+            <div class="chip" style="background: linear-gradient(135deg, #E74C3C, #C0392B)" onclick="placeBet(10)">10</div>
+            <div class="chip" style="background: linear-gradient(135deg, #2ECC71, #27AE60)" onclick="placeBet(25)">25</div>
+            <div class="chip" style="background: linear-gradient(135deg, #3498DB, #2980B9)" onclick="placeBet(50)">50</div>
+            <div class="chip" style="background: linear-gradient(135deg, #9B59B6, #8E44AD)" onclick="placeBet(100)">100</div>
+        </div>
+
+        <div class="section-title">Dealer</div>
+        <div id="dealer-cards" class="cards-container"></div>
+        <div class="section-title">Jugador</div>
+        <div id="player-cards" class="cards-container"></div>
+        
+        <div class="message" id="message">Haz tu apuesta para comenzar</div>
+        
+        <div class="controls">
+            <button id="hit-btn" onclick="playerHit()" disabled>Pedir</button>
+            <button id="stand-btn" onclick="playerStand()" disabled>Plantarse</button>
+            <button id="double-btn" onclick="doubleDown()" disabled>Doblar</button>
+            <button id="repeat-bet-btn" onclick="repeatLastBet()" disabled>Repetir</button>
+            <button id="new-game-btn" onclick="startGame()" disabled>Jugar</button>
+        </div>
+    </div>
+
+    <audio id="cardSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-playing-card-put-down-2564.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="winSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="loseSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-sad-game-over-1943.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Variables del juego
+        let deck = [];
+        let playerHand = [];
+        let dealerHand = [];
+        let gameOver = true;
+        let balance = 1000;
+        let currentBet = 0;
+        let lastBet = 0;
+        let wins = 0, losses = 0, pushes = 0;
+        let canDoubleDown = false;
+
+        // Configuración de tiempos
+        const DEAL_DELAY = 500;
+
+        // Elementos del DOM
+        const hitBtn = document.getElementById('hit-btn');
+        const standBtn = document.getElementById('stand-btn');
+        const doubleBtn = document.getElementById('double-btn');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const repeatBetBtn = document.getElementById('repeat-bet-btn');
+        const messageDiv = document.getElementById('message');
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            createDeck();
+        });
+
+        // Funciones del juego
+        function updateUI() {
+            document.getElementById('balance').textContent = balance;
+            document.getElementById('bet').textContent = currentBet;
+            document.getElementById('wins').textContent = wins;
+            document.getElementById('losses').textContent = losses;
+            document.getElementById('pushes').textContent = pushes;
+
+            // Actualizar estado de los botones
+            newGameBtn.disabled = currentBet === 0 || !gameOver;
+            hitBtn.disabled = gameOver || currentBet === 0;
+            standBtn.disabled = gameOver || currentBet === 0;
+            doubleBtn.disabled = !canDoubleDown || gameOver || balance < currentBet || playerHand.length !== 2;
+            repeatBetBtn.disabled = !gameOver || lastBet === 0 || balance < lastBet;
+        }
+
+        function repeatLastBet() {
+            if(gameOver && lastBet > 0 && balance >= lastBet) {
+                currentBet = lastBet;
+                balance -= lastBet;
+                updateUI();
+                playSound('cardSound');
+            }
+        }
+
+        function placeBet(amount) {
+            if(gameOver && balance >= amount) {
+                currentBet += amount;
+                lastBet = currentBet;
+                balance -= amount;
+                updateUI();
+                playSound('cardSound');
+            }
+        }
+
+        function createDeck() {
+            const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+            const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+            
+            deck = [];
+            for(let suit of suits) {
+                for(let value of values) {
+                    deck.push({
+                        suit: suit,
+                        value: value,
+                        numericValue: getNumericValue(value)
+                    });
+                }
+            }
+            shuffleDeck();
+        }
+
+        function shuffleDeck() {
+            for(let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        function getNumericValue(value) {
+            if(['J', 'Q', 'K'].includes(value)) return 10;
+            if(value === 'A') return 11;
+            return parseInt(value);
+        }
+
+        function calculateScore(hand) {
+            let score = hand.reduce((acc, card) => acc + card.numericValue, 0);
+            let aces = hand.filter(card => card.value === 'A').length;
+            
+            while(score > 21 && aces > 0) {
+                score -= 10;
+                aces--;
+            }
+            return score;
+        }
+
+        function createCardElement(card, hidden = false) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = `card ${hidden ? 'hidden-card' : card.suit}`;
+            
+            if(!hidden) {
+                const suitSymbol = {
+                    hearts: '♥',
+                    diamonds: '♦',
+                    clubs: '♣',
+                    spades: '♠'
+                }[card.suit];
+                
+                cardDiv.innerHTML = `
+                    <div class="card-value">${card.value}</div>
+                    <div class="card-suit">${suitSymbol}</div>
+                    <div class="card-value-bottom">${card.value}</div>
+                `;
+            }
+            return cardDiv;
+        }
+
+        function updateDisplay() {
+            const dealerCardsDiv = document.getElementById('dealer-cards');
+            const playerCardsDiv = document.getElementById('player-cards');
+            
+            dealerCardsDiv.innerHTML = '';
+            playerCardsDiv.innerHTML = '';
+            
+            dealerHand.forEach((card, index) => {
+                const cardElement = createCardElement(card, index === 0 && !gameOver);
+                if(index === 0 && !gameOver) {
+                    cardElement.classList.add('hidden-card');
+                }
+                dealerCardsDiv.appendChild(cardElement);
+            });
+            
+            playerHand.forEach(card => {
+                playerCardsDiv.appendChild(createCardElement(card));
+            });
+            
+            // Mostrar puntuaciones
+            const dealerScoreElement = document.createElement('div');
+            dealerScoreElement.style.cssText = 'width: 100%; text-align: center; margin-top: 10px; font-size: 1rem; color: var(--color-text);';
+            
+            if(gameOver) {
+                dealerScoreElement.textContent = `Puntuación: ${calculateScore(dealerHand)}`;
+            } else {
+                const visibleCard = dealerHand.length > 1 ? dealerHand[1] : dealerHand[0];
+                dealerScoreElement.textContent = `Puntuación: ${getNumericValue(visibleCard.value)}`;
+            }
+            dealerCardsDiv.appendChild(dealerScoreElement);
+
+            const playerScoreElement = document.createElement('div');
+            playerScoreElement.style.cssText = 'width: 100%; text-align: center; margin-top: 10px; font-size: 1rem; color: var(--color-text);';
+            playerScoreElement.textContent = `Puntuación: ${calculateScore(playerHand)}`;
+            playerCardsDiv.appendChild(playerScoreElement);
+        }
+
+        function dealCardWithAnimation(recipient, delay) {
+            setTimeout(() => {
+                if(deck.length === 0) {
+                    createDeck();
+                }
+                recipient.push(deck.pop());
+                updateDisplay();
+                playSound('cardSound');
+                
+                if(recipient === playerHand && playerHand.length === 2) {
+                    canDoubleDown = true;
+                    updateUI();
+                }
+            }, delay);
+        }
+
+        function startGame() {
+            if(currentBet === 0) {
+                showMessage('Debes hacer una apuesta primero');
+                return;
+            }
+            
+            gameOver = false;
+            playerHand = [];
+            dealerHand = [];
+            canDoubleDown = false;
+            
+            if(deck.length < 15) {
+                createDeck();
+                showMessage('Barajando cartas...');
+            }
+            
+            showMessage('Repartiendo cartas...');
+            
+            hitBtn.disabled = true;
+            standBtn.disabled = true;
+            doubleBtn.disabled = true;
+            newGameBtn.disabled = true;
+            repeatBetBtn.disabled = true;
+            
+            dealCardWithAnimation(dealerHand, 0);
+            dealCardWithAnimation(playerHand, DEAL_DELAY);
+            dealCardWithAnimation(dealerHand, DEAL_DELAY * 2);
+            dealCardWithAnimation(playerHand, DEAL_DELAY * 3);
+            
+            setTimeout(() => {
+                checkForBlackjack();
+                updateUI();
+            }, DEAL_DELAY * 4);
+        }
+
+        function checkForBlackjack() {
+            const playerScore = calculateScore(playerHand);
+            const dealerScore = calculateScore(dealerHand);
+            
+            const playerHasBlackjack = playerScore === 21 && playerHand.length === 2;
+            const dealerHasBlackjack = dealerScore === 21 && dealerHand.length === 2;
+            
+            if(playerHasBlackjack && dealerHasBlackjack) {
+                gameOver = true;
+                revealDealerCard();
+                balance += currentBet;
+                pushes++;
+                showMessage('Ambos tienen Blackjack! Empate', 'push');
+            } else if(playerHasBlackjack) {
+                gameOver = true;
+                revealDealerCard();
+                balance += Math.floor(currentBet * 2.5);
+                wins++;
+                showMessage('¡Blackjack! ¡Ganas $' + Math.floor(currentBet * 1.5), 'win');
+                playSound('winSound');
+            } else if(dealerHasBlackjack) {
+                gameOver = true;
+                revealDealerCard();
+                losses++;
+                showMessage('Dealer tiene Blackjack', 'lose');
+                playSound('loseSound');
+            } else if(playerScore === 21) {
+                showMessage('Tienes 21!');
+            }
+            
+            updateUI();
+        }
+
+        function playerHit() {
+            if(gameOver) return;
+            
+            dealCardWithAnimation(playerHand, 0);
+            canDoubleDown = false;
+            
+            setTimeout(() => {
+                const playerScore = calculateScore(playerHand);
+                if(playerScore > 21) {
+                    gameOver = true;
+                    revealDealerCard();
+                    losses++;
+                    showMessage('¡Te pasaste! Pierdes', 'lose');
+                    playSound('loseSound');
+                }
+                updateUI();
+            }, 500);
+        }
+
+        function playerStand() {
+            if(gameOver) return;
+            gameOver = true;
+            revealDealerCard();
+            setTimeout(dealerTurn, 1000);
+        }
+
+        function doubleDown() {
+            if(playerHand.length === 2 && balance >= currentBet) {
+                balance -= currentBet;
+                currentBet *= 2;
+                updateUI();
+                playerHit();
+                setTimeout(playerStand, 500);
+            }
+        }
+
+        function dealerTurn() {
+            let dealerScore = calculateScore(dealerHand);
+            
+            const drawCard = () => {
+                if(dealerScore < 17) {
+                    dealerHand.push(deck.pop());
+                    dealerScore = calculateScore(dealerHand);
+                    updateDisplay();
+                    playSound('cardSound');
+                    setTimeout(drawCard, 1000);
+                } else {
+                    setTimeout(determineWinner, 1000);
+                }
+            };
+            
+            drawCard();
+        }
+
+        function revealDealerCard() {
+            const firstCard = document.querySelector('#dealer-cards .card');
+            if(firstCard && dealerHand.length > 0) {
+                firstCard.classList.remove('hidden-card');
+                firstCard.classList.add(dealerHand[0].suit, 'flip');
+                firstCard.innerHTML = `
+                    <div class="card-value">${dealerHand[0].value}</div>
+                    <div class="card-suit">${
+                        dealerHand[0].suit === 'hearts' ? '♥' : 
+                        dealerHand[0].suit === 'diamonds' ? '♦' :
+                        dealerHand[0].suit === 'clubs' ? '♣' : '♠'
+                    }</div>
+                    <div class="card-value-bottom">${dealerHand[0].value}</div>
+                `;
+                playSound('cardSound');
+                updateDisplay();
+            }
+        }
+
+        function determineWinner() {
+            const playerScore = calculateScore(playerHand);
+            const dealerScore = calculateScore(dealerHand);
+            
+            if(dealerScore > 21) {
+                balance += currentBet * 2;
+                wins++;
+                showMessage('Dealer se pasó! ¡Ganas $' + currentBet * 2, 'win');
+                playSound('winSound');
+            } else if(playerScore > dealerScore) {
+                balance += currentBet * 2;
+                wins++;
+                showMessage('¡Ganaste! $' + currentBet * 2, 'win');
+                playSound('winSound');
+            } else if(dealerScore > playerScore) {
+                losses++;
+                showMessage('Dealer gana', 'lose');
+                playSound('loseSound');
+            } else {
+                balance += currentBet;
+                pushes++;
+                showMessage('Empate', 'push');
+            }
+            
+            currentBet = 0;
+            updateUI();
+        }
+
+        function showMessage(msg, type = '') {
+            messageDiv.textContent = msg;
+            messageDiv.className = 'message';
+            if(type) messageDiv.classList.add(type);
+        }
+
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            if(sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Error al reproducir sonido:", e));
+            }
+        }
+    </script>
+</body>
+</html>
