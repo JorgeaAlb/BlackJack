@@ -4,563 +4,603 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blackjack Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         :root {
-    --color-gold: #FFD700;
-    --color-gold-dark: #D4AF37;
-    --color-red: #E74C3C;
-    --color-green: #27AE60;
-    --color-dark: #1A1A1A;
-    --color-dark-light: #2C3E50;
-    --color-bg: #121212;
-    --color-bg-light: #1E1E1E;
-    --color-text: #ECF0F1;
-    --color-shadow: rgba(0, 0, 0, 0.5);
-}
+            --color-gold: #FFD700;
+            --color-gold-dark: #D4AF37;
+            --color-red: #E74C3C;
+            --color-green: #27AE60;
+            --color-dark: #1A1A1A; /* Un poco más oscuro que light */
+            --color-dark-light: #2C3E50;
+            --color-bg: #121212;
+            --color-bg-light: #1E1E1E;
+            --color-text: #ECF0F1;
+            --color-shadow: rgba(0, 0, 0, 0.5);
+        }
 
-@font-face {
-    font-family: 'Casino';
-    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
-}
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
 
-body {
-    margin: 0;
-    padding: 0;
-    background: var(--color-bg);
-    font-family: 'Arial', sans-serif;
-    color: var(--color-text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
-        linear-gradient(to bottom, var(--color-bg), var(--color-dark));
-}
+        html {
+            touch-action: manipulation;
+            height: 100%;
+        }
 
-.container {
-    width: 95%;
-    max-width: 1200px;
-    margin: 20px auto;
-    background: rgba(30, 30, 30, 0.9);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px var(--color-shadow);
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    backdrop-filter: blur(5px);
-    flex: 1;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--color-bg);
+            font-family: 'Arial', sans-serif;
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+                linear-gradient(to bottom, var(--color-bg), var(--color-dark));
+            overflow-x: hidden;
+            position: relative;
+        }
 
-.game-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding: 20px;
-    background: linear-gradient(to right, var(--color-dark-light), var(--color-dark));
-    border-radius: 10px;
-    border-left: 5px solid var(--color-gold);
-    box-shadow: 0 5px 15px var(--color-shadow);
-}
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: rgba(30, 30, 30, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--color-shadow);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(5px);
+            flex: 1;
+        }
 
-.stats {
-    display: flex;
-    gap: 20px;
-    font-size: 1rem;
-}
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(to right, var(--color-dark-light), var(--color-dark));
+            border-radius: 10px;
+            border-left: 5px solid var(--color-gold);
+            box-shadow: 0 5px 15px var(--color-shadow);
+        }
 
-.stats div {
-    padding: 10px 15px;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    min-width: 100px;
-    text-align: center;
-}
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 1rem;
+        }
 
-.stats span {
-    display: block;
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: var(--color-gold);
-    margin-top: 5px;
-}
+        .stats div {
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 100px;
+            text-align: center;
+        }
 
-.chip-container {
-    display: flex;
-    gap: 15px;
-    margin: 30px 0;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+        .stats span {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--color-gold);
+            margin-top: 5px;
+        }
 
-.chip {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    color: white;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 8px var(--color-shadow);
-    position: relative;
-    overflow: hidden;
-    border: 2px solid var(--color-gold);
-}
+        .chip-container {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-.chip::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
-    transform: rotate(45deg);
-    transition: all 0.3s;
-}
+        .chip {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px var(--color-shadow);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--color-gold);
+        }
 
-.chip:hover {
-    transform: translateY(-5px) scale(1.1);
-    box-shadow: 0 8px 15px var(--color-shadow);
-}
+        .chip::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(45deg);
+            transition: all 0.3s;
+        }
 
-.chip:hover::before {
-    left: 100%;
-}
+        .chip:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 15px var(--color-shadow);
+        }
 
-.section-title {
-    text-align: center;
-    margin: 30px 0 15px;
-    color: var(--color-gold);
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-weight: bold;
-    text-shadow: 0 2px 5px var(--color-shadow);
-    position: relative;
-}
+        .chip:hover::before {
+            left: 100%;
+        }
 
-.section-title::after {
-    content: '';
-    display: block;
-    width: 100px;
-    height: 3px;
-    background: linear-gradient(to right, transparent, var(--color-gold), transparent);
-    margin: 10px auto;
-}
+        .section-title {
+            text-align: center;
+            margin: 30px 0 15px;
+            color: var(--color-gold);
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: bold;
+            text-shadow: 0 2px 5px var(--color-shadow);
+            position: relative;
+        }
 
-.cards-container {
-    display: flex;
-    gap: 20px;
-    min-height: 200px;
-    margin: 30px 0;
-    padding: 30px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    justify-content: center;
-    flex-wrap: wrap;
-    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-    position: relative;
-    overflow: hidden;
-}
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+            margin: 10px auto;
+        }
 
-.cards-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        linear-gradient(135deg, rgba(255,215,0,0.05) 0%, transparent 20%),
-        linear-gradient(-135deg, rgba(255,215,0,0.05) 0%, transparent 20%);
-    pointer-events: none;
-}
+        .cards-container {
+            display: flex;
+            gap: 20px;
+            min-height: 200px;
+            margin: 30px 0;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden; 
+        }
 
-.card {
-    width: 120px;
-    height: 168px;
-    background: white;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 28px;
-    color: #333;
-    position: relative;
-    box-shadow: 5px 5px 15px var(--color-shadow);
-    transition: all 0.3s ease;
-    animation: dealCard 0.5s ease-out;
-    transform-style: preserve-3d;
-    padding: 15px;
-}
+        .cards-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, rgba(255,215,0,0.05) 0%, transparent 20%),
+                linear-gradient(-135deg, rgba(255,215,0,0.05) 0%, transparent 20%);
+            pointer-events: none;
+        }
 
-.card-value {
-    font-size: 2rem;
-    font-weight: bold;
-    align-self: flex-start;
-}
+        .card {
+            width: 120px;
+            height: 168px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 28px;
+            color: #333;
+            position: relative;
+            box-shadow: 5px 5px 15px var(--color-shadow);
+            transition: all 0.3s ease;
+            animation: dealCard 0.5s ease-out;
+            transform-style: preserve-3d;
+            padding: 15px;
+            flex-shrink: 0;
+        }
 
-.card-suit {
-    font-size: 3rem;
-    margin: auto 0;
-}
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            align-self: flex-start;
+        }
 
-.card-value-bottom {
-    align-self: flex-end;
-    transform: rotate(180deg);
-}
+        .card-suit {
+            font-size: 3rem;
+            margin: auto 0;
+        }
 
-.hearts, .diamonds { color: var(--color-red); }
-.spades, .clubs { color: var(--color-dark); }
+        .card-value-bottom {
+            align-self: flex-end;
+            transform: rotate(180deg);
+        }
 
-.hidden-card {
-    background: linear-gradient(135deg, var(--color-dark-light), var(--color-dark));
-    color: transparent;
-    position: relative;
-    overflow: hidden;
-    border: 2px solid var(--color-gold-dark);
-}
+        .hearts, .diamonds { color: var(--color-red); }
+        .spades, .clubs { color: var(--color-dark); }
 
-.hidden-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        repeating-linear-gradient(
-            45deg,
-            rgba(255,215,0,0.1) 0px,
-            rgba(255,215,0,0.1) 2px,
-            transparent 2px,
-            transparent 8px
-        );
-}
+        .hidden-card {
+            background: linear-gradient(135deg, var(--color-dark-light), var(--color-dark));
+            color: transparent;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--color-gold-dark);
+        }
 
-.hidden-card::after {
-    content: '♠';
-    position: absolute;
-    color: rgba(255,255,255,0.05);
-    font-size: 100px;
-    transform: rotate(30deg);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(30deg);
-}
+        .hidden-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(255,215,0,0.1) 0px,
+                    rgba(255,215,0,0.1) 2px,
+                    transparent 2px,
+                    transparent 8px
+                );
+        }
 
-.controls {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 40px;
-    flex-wrap: wrap;
-}
+        .hidden-card::after {
+            content: '♠';
+            position: absolute;
+            color: rgba(255,255,255,0.05);
+            font-size: 100px;
+            transform: rotate(30deg);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(30deg);
+        }
 
-button {
-    padding: 18px 40px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(to bottom, var(--color-gold), var(--color-gold-dark));
-    color: var(--color-dark);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    min-width: 180px;
-    font-size: 1.1rem;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-}
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
 
-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: all 0.5s;
-}
+        button {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(to bottom, var(--color-gold), var(--color-gold-dark));
+            color: var(--color-dark);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 180px;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
 
-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s;
+        }
 
-button:hover::before {
-    left: 100%;
-}
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
 
-button:active {
-    transform: translateY(1px);
-}
+        button:hover::before {
+            left: 100%;
+        }
 
-button:disabled {
-    background: linear-gradient(to bottom, #666, #555);
-    color: #999;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
+        button:active {
+            transform: translateY(1px);
+        }
 
-button:disabled::before {
-    display: none;
-}
+        button:disabled {
+            background: linear-gradient(to bottom, #666, #555);
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
-.message {
-    text-align: center;
-    font-size: 1.8rem;
-    margin: 30px 0;
-    min-height: 50px;
-    color: var(--color-gold);
-    text-shadow: 0 2px 5px var(--color-shadow);
-    padding: 20px;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.3);
-    border-left: 5px solid var(--color-gold);
-    animation: fadeIn 0.5s ease;
-}
+        button:disabled::before {
+            display: none;
+        }
 
-.message.win {
-    background: rgba(39, 174, 96, 0.2);
-    border-left-color: var(--color-green);
-    color: var(--color-green);
-    animation: pulse 1.5s infinite;
-}
+        .message {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 30px 0;
+            min-height: 50px;
+            color: var(--color-gold);
+            text-shadow: 0 2px 5px var(--color-shadow);
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 5px solid var(--color-gold);
+            animation: fadeIn 0.5s ease;
+        }
 
-.message.lose {
-    background: rgba(231, 76, 60, 0.2);
-    border-left-color: var(--color-red);
-    color: var(--color-red);
-}
+        .message.win {
+            background: rgba(39, 174, 96, 0.2);
+            border-left-color: var(--color-green);
+            color: var(--color-green);
+            animation: pulse 1.5s infinite;
+        }
 
-.message.push {
-    background: rgba(52, 152, 219, 0.2);
-    border-left-color: #3498db;
-    color: #3498db;
-}
+        .message.lose {
+            background: rgba(231, 76, 60, 0.2);
+            border-left-color: var(--color-red);
+            color: var(--color-red);
+        }
 
-@keyframes dealCard {
-    0% { transform: translate(-100px, -100px) rotate(15deg); opacity: 0; }
-    100% { transform: translate(0) rotate(0); opacity: 1; }
-}
+        .message.push {
+            background: rgba(52, 152, 219, 0.2);
+            border-left-color: #3498db;
+            color: #3498db;
+        }
 
-@keyframes flip {
-    0% { transform: rotateY(0deg); }
-    50% { transform: rotateY(90deg); }
-    100% { transform: rotateY(0deg); }
-}
+        @keyframes dealCard {
+            0% { transform: translate(-100px, -100px) rotate(15deg); opacity: 0; }
+            100% { transform: translate(0) rotate(0); opacity: 1; }
+        }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(90deg); }
+            100% { transform: rotateY(0deg); }
+        }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
 
-.game-title {
-    font-family: 'Playfair Display', serif;
-    text-align: center;
-    font-size: 3rem;
-    color: var(--color-gold);
-    margin-bottom: 30px;
-    text-shadow: 0 0 10px var(--color-gold-dark), 0 0 20px var(--color-shadow);
-    letter-spacing: 2px;
-    position: relative;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.game-title::after {
-    content: '';
-    display: block;
-    width: 200px;
-    height: 3px;
-    background: linear-gradient(to right, transparent, var(--color-gold), transparent);
-    margin: 15px auto;
-    border-radius: 50%;
-}
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            font-size: 3rem;
+            color: var(--color-gold);
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--color-gold-dark), 0 0 20px var(--color-shadow);
+            letter-spacing: 2px;
+            position: relative;
+        }
 
-/* Estilos del footer */
-footer {
-    width: 100%;
-    background: var(--color-dark-light);
-    padding: 20px 0;
-    text-align: center;
-    margin-top: auto;
-    border-top: 1px solid rgba(255, 215, 0, 0.2);
-}
+        .game-title::after {
+            content: '';
+            display: block;
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+            margin: 15px auto;
+            border-radius: 50%;
+        }
 
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
+        /* Estilos del footer */
+        footer {
+            width: 100%;
+            /* Nuevo degradado sutil */
+            background: linear-gradient(to top, var(--color-dark), var(--color-dark-light));
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+            /* Borde superior dorado con transparencia */
+            border-top: 2px solid rgba(255, 215, 0, 0.3); 
+            /* Sombra interior para darle profundidad */
+            box-shadow: inset 0 8px 15px rgba(0, 0, 0, 0.4); 
+            position: relative;
+            bottom: 0;
+        }
 
-.footer-content p {
-    margin: 0;
-    color: var(--color-text);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-.instagram-icon {
-    color: var(--color-text);
-    transition: all 0.3s ease;
-    font-size: 1.2rem;
-}
+        .footer-content p {
+            margin: 0;
+            color: var(--color-text);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-.instagram-icon:hover {
-    color: #E1306C;
-    transform: scale(1.2);
-}
+        .instagram-icon {
+            color: var(--color-text); /* Color inicial de texto */
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
 
-/* Media Queries para móvil */
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-        width: 100%;
-        margin: 10px auto;
-        border-radius: 0;
-    }
-    
-    .game-header {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-    }
-    
-    .stats {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        width: 100%;
-    }
-    
-    .stats div {
-        min-width: 80px;
-        padding: 8px 10px;
-        font-size: 0.9rem;
-    }
-    
-    .stats span {
-        font-size: 1.2rem;
-    }
-    
-    .card {
-        width: 70px;
-        height: 98px;
-        font-size: 20px;
-        padding: 10px;
-    }
-    
-    .card-value {
-        font-size: 1.2rem;
-    }
-    
-    .card-suit {
-        font-size: 1.8rem;
-    }
-    
-    .controls {
-        gap: 10px;
-        margin-top: 20px;
-    }
-    
-    button {
-        padding: 12px 20px;
-        min-width: 120px;
-        font-size: 0.9rem;
-    }
-    
-    .message {
-        font-size: 1.2rem;
-        padding: 15px;
-        margin: 20px 0;
-    }
-    
-    .section-title {
-        font-size: 1.3rem;
-        margin: 20px 0 10px;
-    }
-    
-    .chip {
-        width: 50px;
-        height: 50px;
-        font-size: 0.9rem;
-    }
-    
-    .cards-container {
-        padding: 15px;
-        min-height: 150px;
-        margin: 15px 0;
-    }
-    
-    .game-title {
-        font-size: 2rem;
-        margin-bottom: 20px;
-    }
-    
-    .game-title::after {
-        width: 150px;
-    }
-    
-    /* Footer en móvil */
-    footer {
-        padding: 15px 0;
-    }
-    
-    .footer-content p {
-        font-size: 0.8rem;
-        flex-direction: row;
-        gap: 5px;
-    }
-}
+        .instagram-icon:hover {
+            color: #E1306C; /* Rosa vibrante al pasar el ratón */
+            transform: scale(1.2);
+        }
 
-@media (max-width: 480px) {
-    .card {
-        width: 60px;
-        height: 84px;
-    }
-    
-    button {
-        min-width: 100px;
-        padding: 10px 15px;
-    }
-    
-    .chip-container {
-        gap: 10px;
-        margin: 20px 0;
-    }
-    
-    .chip {
-        width: 45px;
-        height: 45px;
-        font-size: 0.8rem;
-    }
-    
-    .section-title {
-        font-size: 1.1rem;
-    }
-}
+        /* Media Queries para móvil */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                width: calc(100% - 20px); 
+                margin: 10px auto;
+                border-radius: 0; 
+            }
+            
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .stats div {
+                min-width: 80px;
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .stats span {
+                font-size: 1.2rem;
+            }
+            
+            .cards-container {
+                padding: 15px;
+                min-height: 120px; 
+                margin: 15px 0;
+                gap: 10px; 
+            }
+            
+            .card {
+                width: 75px; 
+                height: 105px; 
+                font-size: 18px;
+                padding: 8px;
+            }
+            
+            .card-value {
+                font-size: 1.1rem;
+            }
+            
+            .card-suit {
+                font-size: 1.6rem;
+            }
+            
+            .controls {
+                gap: 8px;
+                margin-top: 20px;
+            }
+            
+            button {
+                padding: 12px 18px;
+                min-width: unset;
+                flex-grow: 1;
+                font-size: 0.9rem;
+            }
+            
+            .message {
+                font-size: 1.2rem;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+                margin: 20px 0 10px;
+            }
+            
+            .chip-container {
+                gap: 10px;
+                margin: 20px 0;
+            }
+            
+            .chip {
+                width: 50px;
+                height: 50px;
+                font-size: 0.9rem;
+            }
+            
+            .game-title {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .game-title::after {
+                width: 150px;
+            }
+            
+            /* Footer en móvil */
+            footer {
+                padding: 15px 0;
+            }
+            
+            .footer-content p {
+                font-size: 0.8rem;
+                flex-direction: row; 
+                gap: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: 60px; 
+                height: 84px;
+                font-size: 14px;
+                padding: 5px;
+            }
+            
+            .card-value {
+                font-size: 0.9rem;
+            }
+            
+            .card-suit {
+                font-size: 1.2rem;
+            }
+            
+            button {
+                min-width: unset;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                flex-basis: auto;
+            }
+            
+            .chip-container {
+                gap: 8px;
+                margin: 15px 0;
+            }
+            
+            .chip {
+                width: 40px;
+                height: 40px;
+                font-size: 0.7rem;
+            }
+            
+            .section-title {
+                font-size: 1rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            
+            .game-title {
+                font-size: 1.6rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -617,7 +657,7 @@ footer {
     <footer>
         <div class="footer-content">
             <p>
-                <a href="https://www.instagram.com/jorge_shh/" class="instagram-icon">
+                <a href="https://www.instagram.com/jorge_shh/" class="instagram-icon" aria-label="Perfil de Instagram de Jorge Alberto">
                     <i class="fab fa-instagram"></i>
                 </a>
                 Jorge Alberto · Blackjack · Todos los derechos reservados. © 2025
@@ -626,376 +666,414 @@ footer {
     </footer>
 
     <script> 
-// Variables del juego
-let deck = [];
-let playerHand = [];
-let dealerHand = [];
-let gameOver = true;
-let balance = 1000;
-let currentBet = 0;
-let lastBet = 0; // Nueva variable para guardar la última apuesta
-let wins = 0, losses = 0, pushes = 0;
-let canDoubleDown = false;
+        // Variables del juego
+        let deck = [];
+        let playerHand = [];
+        let dealerHand = [];
+        let gameOver = true;
+        let balance = 1000;
+        let currentBet = 0;
+        let lastBet = 0; 
+        let wins = 0, losses = 0, pushes = 0;
+        let canDoubleDown = false;
 
-// Configuración de tiempos (en milisegundos)
-const DEAL_DELAY = 500; // Aumentado de 300 a 500 ms
-const CARD_ANIMATION_DURATION = 600; // Aumentado para que dure más
+        // Configuración de tiempos (en milisegundos)
+        const DEAL_DELAY = 500;
+        const CARD_ANIMATION_DURATION = 600;
 
-// Elementos del DOM
-const hitBtn = document.getElementById('hit-btn');
-const standBtn = document.getElementById('stand-btn');
-const doubleBtn = document.getElementById('double-btn');
-const newGameBtn = document.getElementById('new-game-btn');
-const repeatBetBtn = document.getElementById('repeat-bet-btn'); // Nuevo botón
-const messageDiv = document.getElementById('message');
+        // Elementos del DOM
+        const hitBtn = document.getElementById('hit-btn');
+        const standBtn = document.getElementById('stand-btn');
+        const doubleBtn = document.getElementById('double-btn');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const repeatBetBtn = document.getElementById('repeat-bet-btn');
+        const messageDiv = document.getElementById('message');
 
-// Inicialización
-document.addEventListener('DOMContentLoaded', () => {
-    updateUI();
-    createDeck();
-});
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            createDeck();
+        });
 
-// Funciones del juego
-function updateUI() {
-    document.getElementById('balance').textContent = balance;
-    document.getElementById('bet').textContent = currentBet;
-    document.getElementById('wins').textContent = wins;
-    document.getElementById('losses').textContent = losses;
-    document.getElementById('pushes').textContent = pushes;
+        // Funciones del juego
+        function updateUI() {
+            document.getElementById('balance').textContent = balance;
+            document.getElementById('bet').textContent = currentBet;
+            document.getElementById('wins').textContent = wins;
+            document.getElementById('losses').textContent = losses;
+            document.getElementById('pushes').textContent = pushes;
 
-    // Actualizar estado de los botones
-    newGameBtn.disabled = currentBet === 0 || !gameOver;
-    hitBtn.disabled = gameOver || currentBet === 0;
-    standBtn.disabled = gameOver || currentBet === 0;
-    doubleBtn.disabled = !canDoubleDown || gameOver || balance < currentBet || playerHand.length !== 2;
-    
-    // Corrección para el botón de repetir apuesta:
-    repeatBetBtn.disabled = !gameOver || lastBet === 0 || balance < lastBet;
-}
+            newGameBtn.disabled = currentBet === 0 || !gameOver;
+            hitBtn.disabled = gameOver || currentBet === 0;
+            standBtn.disabled = gameOver || currentBet === 0;
+            doubleBtn.disabled = !canDoubleDown || gameOver || balance < currentBet || playerHand.length !== 2;
+            
+            repeatBetBtn.disabled = !gameOver || lastBet === 0 || balance < lastBet;
+        }
 
-// Nueva función para repetir apuesta
-function repeatLastBet() {
-    if(gameOver && lastBet > 0 && balance >= lastBet) {
-        currentBet = lastBet;
-        balance -= lastBet;
-        updateUI();
-        playSound('cardSound');
-    }
-}
+        function repeatLastBet() {
+            if(gameOver && lastBet > 0 && balance >= lastBet) {
+                currentBet = lastBet;
+                balance -= lastBet;
+                updateUI();
+                playSound('cardSound');
+                startGame();
+            }
+        }
 
-function placeBet(amount) {
-    if(gameOver && balance >= amount) {
-        currentBet += amount;
-        lastBet = currentBet; // Guardamos la apuesta actual como última apuesta
-        balance -= amount;
-        updateUI();
-        playSound('cardSound');
-    }
-}
+        function placeBet(amount) {
+            if(gameOver && balance >= amount) {
+                currentBet += amount;
+                lastBet = currentBet;
+                balance -= amount;
+                updateUI();
+                playSound('cardSound');
+            }
+        }
 
-function createDeck() {
-    const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
-    const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    
-    deck = [];
-    for(let suit of suits) {
-        for(let value of values) {
-            deck.push({
-                suit: suit,
-                value: value,
-                numericValue: getNumericValue(value)
+        function createDeck() {
+            const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+            const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+            
+            deck = [];
+            for(let suit of suits) {
+                for(let value of values) {
+                    deck.push({
+                        suit: suit,
+                        value: value,
+                        numericValue: getNumericValue(value)
+                    });
+                }
+            }
+            shuffleDeck();
+        }
+
+        function shuffleDeck() {
+            for(let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        function getNumericValue(value) {
+            if(['J', 'Q', 'K'].includes(value)) return 10;
+            if(value === 'A') return 11;
+            return parseInt(value);
+        }
+
+        function calculateScore(hand) {
+            let score = hand.reduce((acc, card) => acc + card.numericValue, 0);
+            let aces = hand.filter(card => card.value === 'A').length;
+            
+            while(score > 21 && aces > 0) {
+                score -= 10;
+                aces--;
+            }
+            return score;
+        }
+
+        function createCardElement(card, hidden = false) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = `card ${hidden ? 'hidden-card' : card.suit}`;
+            cardDiv.style.animationDuration = `${CARD_ANIMATION_DURATION}ms`;
+            
+            if(!hidden) {
+                const suitSymbol = {
+                    hearts: '♥',
+                    diamonds: '♦',
+                    clubs: '♣',
+                    spades: '♠'
+                }[card.suit];
+                
+                cardDiv.innerHTML = `
+                    <div class="card-value">${card.value}</div>
+                    <div class="card-suit">${suitSymbol}</div>
+                    <div class="card-value-bottom">${card.value}</div>
+                `;
+            }
+            return cardDiv;
+        }
+
+        function updateDisplay() {
+            const dealerCardsDiv = document.getElementById('dealer-cards');
+            const playerCardsDiv = document.getElementById('player-cards');
+            
+            dealerCardsDiv.innerHTML = '';
+            playerCardsDiv.innerHTML = '';
+            
+            dealerHand.forEach((card, index) => {
+                const cardElement = createCardElement(card, index === 0 && !gameOver);
+                if(index === 0 && !gameOver) {
+                    cardElement.classList.add('hidden-card');
+                }
+                dealerCardsDiv.appendChild(cardElement);
+            });
+            
+            playerHand.forEach(card => {
+                playerCardsDiv.appendChild(createCardElement(card));
+            });
+            
+            const dealerScoreElement = document.createElement('div');
+            dealerScoreElement.style.cssText = 'width: 100%; text-align: center; margin-top: 15px; font-size: 1.2rem; color: var(--color-text);';
+            
+            if(gameOver) {
+                dealerScoreElement.textContent = `Puntuación: ${calculateScore(dealerHand)}`;
+            } else {
+                const visibleCard = dealerHand.length > 1 ? dealerHand[1] : dealerHand[0];
+                dealerScoreElement.textContent = `Puntuación: ${getNumericValue(visibleCard.value)}`;
+            }
+            dealerCardsDiv.appendChild(dealerScoreElement);
+
+            const playerScoreElement = document.createElement('div');
+            playerScoreElement.style.cssText = 'width: 100%; text-align: center; margin-top: 15px; font-size: 1.2rem; color: var(--color-text);';
+            playerScoreElement.textContent = `Puntuación: ${calculateScore(playerHand)}`;
+            playerCardsDiv.appendChild(playerScoreElement);
+        }
+
+        function dealCardWithAnimation(recipient, delay) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    if(deck.length === 0) {
+                        createDeck();
+                    }
+                    recipient.push(deck.pop());
+                    updateDisplay();
+                    playSound('cardSound');
+                    
+                    if(recipient === playerHand && playerHand.length === 2) {
+                        canDoubleDown = true;
+                        updateUI();
+                    }
+                    resolve();
+                }, delay);
             });
         }
-    }
-    shuffleDeck();
-}
 
-function shuffleDeck() {
-    for(let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-}
-
-function getNumericValue(value) {
-    if(['J', 'Q', 'K'].includes(value)) return 10;
-    if(value === 'A') return 11;
-    return parseInt(value);
-}
-
-function calculateScore(hand) {
-    let score = hand.reduce((acc, card) => acc + card.numericValue, 0);
-    let aces = hand.filter(card => card.value === 'A').length;
-    
-    while(score > 21 && aces > 0) {
-        score -= 10;
-        aces--;
-    }
-    return score;
-}
-
-function createCardElement(card, hidden = false) {
-    const cardDiv = document.createElement('div');
-    cardDiv.className = `card ${hidden ? 'hidden-card' : card.suit}`;
-    cardDiv.style.animationDuration = `${CARD_ANIMATION_DURATION}ms`; // Controlar duración animación
-    
-    if(!hidden) {
-        const suitSymbol = {
-            hearts: '♥',
-            diamonds: '♦',
-            clubs: '♣',
-            spades: '♠'
-        }[card.suit];
-        
-        cardDiv.innerHTML = `
-            <div class="card-value">${card.value}</div>
-            <div class="card-suit">${suitSymbol}</div>
-            <div class="card-value-bottom">${card.value}</div>
-        `;
-    }
-    return cardDiv;
-}
-
-function updateDisplay() {
-    const dealerCardsDiv = document.getElementById('dealer-cards');
-    const playerCardsDiv = document.getElementById('player-cards');
-    
-    dealerCardsDiv.innerHTML = '';
-    playerCardsDiv.innerHTML = '';
-    
-    // Mostrar cartas del dealer
-    dealerHand.forEach((card, index) => {
-        const cardElement = createCardElement(card, index === 0 && !gameOver);
-        if(index === 0 && !gameOver) {
-            cardElement.classList.add('hidden-card');
+        async function startGame() {
+            if(currentBet === 0) {
+                showMessage('Debes hacer una apuesta primero');
+                return;
+            }
+            
+            gameOver = false;
+            playerHand = [];
+            dealerHand = [];
+            canDoubleDown = false;
+            
+            if(deck.length < 15) {
+                createDeck();
+                showMessage('Barajando cartas...');
+            }
+            
+            showMessage('Repartiendo cartas...');
+            
+            hitBtn.disabled = true;
+            standBtn.disabled = true;
+            doubleBtn.disabled = true;
+            newGameBtn.disabled = true;
+            repeatBetBtn.disabled = true;
+            
+            await dealCardWithAnimation(dealerHand, 0);
+            await dealCardWithAnimation(playerHand, DEAL_DELAY);
+            await dealCardWithAnimation(dealerHand, DEAL_DELAY * 2);
+            await dealCardWithAnimation(playerHand, DEAL_DELAY * 3);
+            
+            checkForBlackjack();
+            updateUI();
+            
+            if (!gameOver) {
+                hitBtn.disabled = false;
+                standBtn.disabled = false;
+                doubleBtn.disabled = !canDoubleDown || balance < currentBet;
+            }
         }
-        dealerCardsDiv.appendChild(cardElement);
-    });
-    
-    // Mostrar cartas del jugador
-    playerHand.forEach(card => {
-        playerCardsDiv.appendChild(createCardElement(card));
-    });
-    
-    // Mostrar puntuaciones
-    const dealerScoreElement = document.createElement('div');
-    dealerScoreElement.style.cssText = 'width: 100%; text-align: center; margin-top: 15px; font-size: 1.2rem; color: var(--color-text);';
-    
-    if(gameOver) {
-        dealerScoreElement.textContent = `Puntuación: ${calculateScore(dealerHand)}`;
-    } else {
-        const visibleCard = dealerHand.length > 1 ? dealerHand[1] : dealerHand[0];
-        dealerScoreElement.textContent = `Puntuación: ${getNumericValue(visibleCard.value)}`;
-    }
-    dealerCardsDiv.appendChild(dealerScoreElement);
 
-    const playerScoreElement = document.createElement('div');
-    playerScoreElement.style.cssText = 'width: 100%; text-align: center; margin-top: 15px; font-size: 1.2rem; color: var(--color-text);';
-    playerScoreElement.textContent = `Puntuación: ${calculateScore(playerHand)}`;
-    playerCardsDiv.appendChild(playerScoreElement);
-}
-
-function dealCardWithAnimation(recipient, delay) {
-    setTimeout(() => {
-        if(deck.length === 0) {
-            createDeck();
-        }
-        recipient.push(deck.pop());
-        updateDisplay();
-        playSound('cardSound');
-        
-        if(recipient === playerHand && playerHand.length === 2) {
-            canDoubleDown = true;
+        function checkForBlackjack() {
+            const playerScore = calculateScore(playerHand);
+            const dealerScore = calculateScore(dealerHand);
+            
+            const playerHasBlackjack = playerScore === 21 && playerHand.length === 2;
+            const dealerHasBlackjack = dealerScore === 21 && dealerHand.length === 2;
+            
+            if(playerHasBlackjack && dealerHasBlackjack) {
+                gameOver = true;
+                revealDealerCard();
+                balance += currentBet;
+                pushes++;
+                showMessage('Ambos tienen Blackjack! Empate', 'push');
+            } else if(playerHasBlackjack) {
+                gameOver = true;
+                revealDealerCard();
+                balance += Math.floor(currentBet * 2.5);
+                wins++;
+                showMessage('¡Blackjack! ¡Ganas $' + Math.floor(currentBet * 1.5), 'win');
+                playSound('winSound');
+            } else if(dealerHasBlackjack) {
+                gameOver = true;
+                revealDealerCard();
+                losses++;
+                showMessage('Dealer tiene Blackjack', 'lose');
+                playSound('loseSound');
+            } else if(playerScore === 21) {
+                showMessage('Tienes 21!');
+                hitBtn.disabled = true;
+                doubleBtn.disabled = true;
+            }
+            
             updateUI();
         }
-    }, delay);
-}
 
-function startGame() {
-    if(currentBet === 0) {
-        showMessage('Debes hacer una apuesta primero');
-        return;
-    }
-    
-    gameOver = false;
-    playerHand = [];
-    dealerHand = [];
-    canDoubleDown = false;
-    
-    if(deck.length < 15) {
-        createDeck();
-        showMessage('Barajando cartas...');
-    }
-    
-    showMessage('Repartiendo cartas...');
-    
-    hitBtn.disabled = true;
-    standBtn.disabled = true;
-    doubleBtn.disabled = true;
-    newGameBtn.disabled = true;
-    repeatBetBtn.disabled = true;
-    
-    // Repartir cartas con los nuevos tiempos
-    dealCardWithAnimation(dealerHand, 0);
-    dealCardWithAnimation(playerHand, DEAL_DELAY);
-    dealCardWithAnimation(dealerHand, DEAL_DELAY * 2);
-    dealCardWithAnimation(playerHand, DEAL_DELAY * 3);
-    
-    setTimeout(() => {
-        checkForBlackjack();
-        updateUI();
-    }, DEAL_DELAY * 4);
-}
+        async function playerHit() {
+            if(gameOver) return;
+            
+            hitBtn.disabled = true;
+            standBtn.disabled = true;
+            doubleBtn.disabled = true;
 
-function checkForBlackjack() {
-    const playerScore = calculateScore(playerHand);
-    const dealerScore = calculateScore(dealerHand);
-    
-    const playerHasBlackjack = playerScore === 21 && playerHand.length === 2;
-    const dealerHasBlackjack = dealerScore === 21 && dealerHand.length === 2;
-    
-    if(playerHasBlackjack && dealerHasBlackjack) {
-        gameOver = true;
-        revealDealerCard();
-        balance += currentBet;
-        pushes++;
-        showMessage('Ambos tienen Blackjack! Empate', 'push');
-    } else if(playerHasBlackjack) {
-        gameOver = true;
-        revealDealerCard();
-        balance += Math.floor(currentBet * 2.5);
-        wins++;
-        showMessage('¡Blackjack! ¡Ganas $' + Math.floor(currentBet * 1.5), 'win');
-        playSound('winSound');
-    } else if(dealerHasBlackjack) {
-        gameOver = true;
-        revealDealerCard();
-        losses++;
-        showMessage('Dealer tiene Blackjack', 'lose');
-        playSound('loseSound');
-    } else if(playerScore === 21) {
-        showMessage('Tienes 21!');
-    }
-    
-    updateUI();
-}
+            await dealCardWithAnimation(playerHand, 0);
+            canDoubleDown = false;
+            
+            const playerScore = calculateScore(playerHand);
+            if(playerScore > 21) {
+                gameOver = true;
+                revealDealerCard();
+                losses++;
+                showMessage('¡Te pasaste! Pierdes', 'lose');
+                playSound('loseSound');
+            }
+            updateUI();
+            if (!gameOver) {
+                hitBtn.disabled = false;
+                standBtn.disabled = false;
+            }
+        }
 
-function playerHit() {
-    if(gameOver) return;
-    
-    dealCardWithAnimation(playerHand, 0);
-    canDoubleDown = false;
-    
-    setTimeout(() => {
-        const playerScore = calculateScore(playerHand);
-        if(playerScore > 21) {
+        async function playerStand() {
+            if(gameOver) return;
             gameOver = true;
+            hitBtn.disabled = true;
+            standBtn.disabled = true;
+            doubleBtn.disabled = true;
+
             revealDealerCard();
-            losses++;
-            showMessage('¡Te pasaste! Pierdes', 'lose');
-            playSound('loseSound');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            dealerTurn();
         }
-        updateUI();
-    }, 500);
-}
 
-function playerStand() {
-    if(gameOver) return;
-    gameOver = true;
-    revealDealerCard();
-    setTimeout(dealerTurn, 1000);
-}
+        async function doubleDown() {
+            if(playerHand.length === 2 && balance >= currentBet && !gameOver) {
+                balance -= currentBet;
+                currentBet *= 2;
+                updateUI();
 
-function doubleDown() {
-    if(playerHand.length === 2 && balance >= currentBet) {
-        balance -= currentBet;
-        currentBet *= 2;
-        updateUI();
-        playerHit();
-        setTimeout(playerStand, 500);
-    }
-}
+                hitBtn.disabled = true;
+                standBtn.disabled = true;
+                doubleBtn.disabled = true;
 
-function dealerTurn() {
-    let dealerScore = calculateScore(dealerHand);
-    
-    const drawCard = () => {
-        if(dealerScore < 17) {
-            dealerHand.push(deck.pop());
-            dealerScore = calculateScore(dealerHand);
-            updateDisplay();
-            playSound('cardSound');
-            setTimeout(drawCard, 1000);
-        } else {
-            setTimeout(determineWinner, 1000);
+                await dealCardWithAnimation(playerHand, 0);
+                canDoubleDown = false;
+
+                if (calculateScore(playerHand) <= 21) {
+                    playerStand();
+                } else {
+                    gameOver = true;
+                    revealDealerCard();
+                    losses++;
+                    showMessage('¡Te pasaste al doblar! Pierdes', 'lose');
+                    playSound('loseSound');
+                    updateUI();
+                }
+            }
         }
-    };
-    
-    drawCard();
-}
 
-function revealDealerCard() {
-    const firstCard = document.querySelector('#dealer-cards .card');
-    if(firstCard && dealerHand.length > 0) {
-        firstCard.classList.remove('hidden-card');
-        firstCard.classList.add(dealerHand[0].suit, 'flip');
-        firstCard.innerHTML = `
-            <div class="card-value">${dealerHand[0].value}</div>
-            <div class="card-suit">${
-                dealerHand[0].suit === 'hearts' ? '♥' : 
-                dealerHand[0].suit === 'diamonds' ? '♦' :
-                dealerHand[0].suit === 'clubs' ? '♣' : '♠'
-            }</div>
-            <div class="card-value-bottom">${dealerHand[0].value}</div>
-        `;
-        playSound('cardSound');
-        
-        // Actualizar el display para mostrar el puntaje completo
-        updateDisplay();
-    }
-}
+        function dealerTurn() {
+            let dealerScore = calculateScore(dealerHand);
+            
+            const drawCard = () => {
+                if(dealerScore < 17) {
+                    dealCardWithAnimation(dealerHand, DEAL_DELAY).then(() => {
+                        dealerScore = calculateScore(dealerHand);
+                        if (gameOver) return;
+                        setTimeout(drawCard, 1000);
+                    });
+                } else {
+                    determineWinner();
+                }
+            };
+            
+            drawCard();
+        }
 
-function determineWinner() {
-    const playerScore = calculateScore(playerHand);
-    const dealerScore = calculateScore(dealerHand);
-    
-    if(dealerScore > 21) {
-        balance += currentBet * 2;
-        wins++;
-        showMessage('Dealer se pasó! ¡Ganas $' + currentBet * 2, 'win');
-        playSound('winSound');
-    } else if(playerScore > dealerScore) {
-        balance += currentBet * 2;
-        wins++;
-        showMessage('¡Ganaste! $' + currentBet * 2, 'win');
-        playSound('winSound');
-    } else if(dealerScore > playerScore) {
-        losses++;
-        showMessage('Dealer gana', 'lose');
-        playSound('loseSound');
-    } else {
-        balance += currentBet;
-        pushes++;
-        showMessage('Empate', 'push');
-    }
-    
-    currentBet = 0;
-    updateUI();
-}
+        function revealDealerCard() {
+            const firstCardElement = document.querySelector('#dealer-cards .hidden-card');
+            if(firstCardElement && dealerHand.length > 0) {
+                firstCardElement.classList.remove('hidden-card');
+                firstCardElement.classList.add(dealerHand[0].suit);
+                firstCardElement.style.animation = 'flip 0.5s ease-out forwards';
 
-function showMessage(msg, type = '') {
-    messageDiv.textContent = msg;
-    messageDiv.className = 'message';
-    if(type) messageDiv.classList.add(type);
-}
+                setTimeout(() => {
+                    const suitSymbol = {
+                        hearts: '♥',
+                        diamonds: '♦',
+                        clubs: '♣',
+                        spades: '♠'
+                    }[dealerHand[0].suit];
+                    firstCardElement.innerHTML = `
+                        <div class="card-value">${dealerHand[0].value}</div>
+                        <div class="card-suit">${suitSymbol}</div>
+                        <div class="card-value-bottom">${dealerHand[0].value}</div>
+                    `;
+                    firstCardElement.style.animation = '';
+                    updateDisplay();
+                }, 500);
+                
+                playSound('cardSound');
+            }
+        }
 
-function playSound(soundId) {
-    const sound = document.getElementById(soundId);
-    if(sound) {
-        sound.currentTime = 0;
-        sound.play().catch(e => console.log("Error al reproducir sonido:", e));
-    }
-}
+        function determineWinner() {
+            const playerScore = calculateScore(playerHand);
+            const dealerScore = calculateScore(dealerHand);
+            
+            if(dealerScore > 21) {
+                balance += currentBet * 2;
+                wins++;
+                showMessage('Dealer se pasó! ¡Ganas $' + currentBet * 2, 'win');
+                playSound('winSound');
+            } else if(playerScore > dealerScore) {
+                balance += currentBet * 2;
+                wins++;
+                showMessage('¡Ganaste! $' + currentBet * 2, 'win');
+                playSound('winSound');
+            } else if(dealerScore > playerScore) {
+                losses++;
+                showMessage('Dealer gana', 'lose');
+                playSound('loseSound');
+            } else {
+                balance += currentBet;
+                pushes++;
+                showMessage('Empate', 'push');
+            }
+            
+            currentBet = 0;
+            gameOver = true;
+            updateUI();
+        }
+
+        function showMessage(msg, type = '') {
+            messageDiv.textContent = msg;
+            messageDiv.className = 'message';
+            if(type) messageDiv.classList.add(type);
+            messageDiv.style.display = 'block';
+        }
+
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            if(sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Error al reproducir sonido:", e));
+            }
+        }
     </script>
 </body>
 </html>
